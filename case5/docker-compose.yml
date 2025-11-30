@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  # --- GATEWAY UTAMA (Pintu Gerbang) ---
+  loadbalancer:
+    image: nginx:latest
+    ports:
+      - "5000:80"  # Kita akses lewat port 5000
+    volumes:
+      - ./lb/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - processing-node-1
+      - processing-node-2
+      - processing-node-3
+    networks:
+      - farming-net
+
+  # --- WORKER NODE 1 (Pekerja A) ---
+  processing-node-1:
+    image: nginxdemos/hello
+    networks:
+      - farming-net
+
+  # --- WORKER NODE 2 (Pekerja B) ---
+  processing-node-2:
+    image: nginxdemos/hello
+    networks:
+      - farming-net
+
+  # --- WORKER NODE 3 (Pekerja C) ---
+  processing-node-3:
+    image: nginxdemos/hello
+    networks:
+      - farming-net
+
+networks:
+  farming-net:
